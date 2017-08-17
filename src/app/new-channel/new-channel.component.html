@@ -1,0 +1,11 @@
+<div>
+	<div class="header">
+		<md-icon (click)="router.navigate(['messages'])">arrow_back</md-icon>
+		<md-input-container>
+			<input mdInput placeholder="Enter a channel name">
+		</md-input-container>
+	</div>
+	<md-list class="user-list">
+		<md-list-item *ngFor="let user of users">{{user.email}}</md-list-item>
+	</md-list>
+</div>

@@ -1,0 +1,27 @@
+<div>
+	<form [formGroup]="loginForm">
+		<md-input-container>
+			<input mdInput placeholder="Email" formControlName="email">
+			<md-error *ngIf="loginForm.controls.email.hasError('pattern')">
+				Please enter a valid email address
+			</md-error>
+			<md-error *ngIf="loginForm.controls.email.hasError('required')">
+				Email is <strong>required</strong>
+			</md-error>
+		</md-input-container>
+		<md-input-container>
+			<input mdInput placeholder="Password" formControlName="password" type="password">
+			<md-error *ngIf="loginForm.controls.password.hasError('pattern')">
+				Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
+			</md-error>
+			<md-error *ngIf="loginForm.controls.password.hasError('required')">
+				Password is <strong>required</strong>
+			</md-error>
+		</md-input-container>
+		<div [style.margin-top]="loginForm.controls.password.hasError('pattern') ? '40px': '0px'" class="login-buttons">
+			<button md-raised-button (click)="login(loginForm.value)">Login</button>
+			<button md-raised-button (click)="createUser(loginForm.value)">Create Account</button>
+			<button md-raised-button (click)="authService.googleLogin()">Login with Google</button>
+		</div>
+	</form>
+</div>

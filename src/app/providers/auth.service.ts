@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
@@ -8,7 +9,7 @@ export class AuthService {
 
 	authState: any = null;
 
-	constructor(public afAuth: AngularFireAuth, private db: AngularFireDatabase) { 
+	constructor(public afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) { 
 		this.afAuth.authState.subscribe(auth => {
 			this.authState = auth;
 		})
@@ -52,6 +53,7 @@ export class AuthService {
 	signInWithEmail(email: string, password: string){
 		this.afAuth.auth.signInWithEmailAndPassword(email, password)
 		.then(user => {
+			console.log(user);
 			this.authState = user;
 			this.updateUserData();
 		})
@@ -59,8 +61,9 @@ export class AuthService {
 	}
 
 	oAuthSignIn(provider){
-		this.afAuth.auth.signInWithRedirect(provider)
+		this.afAuth.auth.signInWithPopup(provider)
 			.then(credentials => {
+				console.log(credentials);
 				this.authState = credentials.user;
 				this.updateUserData();
 			})
@@ -85,12 +88,16 @@ export class AuthService {
 	}
 
 	private updateUserData(): void {
-		let path = 'users/${this.currentUserId}';
+		let path = 'users/' + this.currentUserId;
 		let data = {
 			email: this.authState.email,
 			name: this.authState.displayName
 		}
 		this.db.object(path).update(data)
+			.then((data) => {
+				console.log(data);
+				this.router.navigate(["messages"]);
+			})
 			.catch(error => console.log(error))
 	}
 }
